@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="丁ql">
+    <meta name="description" content="hotel_management_system">
+    <title>hotel</title>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+    <link href="/static/bootstrap/css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">酒店管理系统</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse"
+            data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    {#    <input class="form-control form-control-dark w-100" type="text" placeholder="搜索" aria-label="Search">#}
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" href="{% url 'logout' %}">注销</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="sidebar-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        {% block customer_manager %}
+                            <a class="nav-link" href="{% url 'list_customers' %}">
+                                <span data-feather="users"></span>
+                                顾客管理 <span class="sr-only">(current)</span>
+                            </a>
+                        {% endblock %}
+                    </li>
+                    <li class="nav-item">
+                        {% block order_manager %}
+                            <a class="nav-link" href="{% url 'list_orders' %}">
+                                <span data-feather="file"></span>
+                                订单管理
+                            </a>
+                        {% endblock %}
+                    </li>
+                    <li class="nav-item">
+                        {% block room_manager %}
+                            <a class="nav-link" href="{% url 'list_rooms' %}">
+                                <span data-feather="home"></span>
+                                客房管理
+                            </a>
+                        {% endblock %}
+                    </li>
+                    <li class="nav-item">
+                        {% block room_checkin_manager %}
+                            <a class="nav-link" href="{% url 'list_room_checkins' %}">
+                                <span data-feather="shopping-cart"></span>
+                                办理入住
+                            </a>
+                        {% endblock %}
+                    </li>
+                    {% block room_checkout_manager %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'list_room_checkouts' %}">
+                                <span data-feather="bar-chart-2"></span>
+                                办理退房
+                            </a>
+                        </li>
+                    {% endblock %}
+                    <li class="nav-item">
+                        {% block checkin_customers %}
+                            <a class="nav-link" href="{% url 'list_checkin_customers' %}">
+                                <span data-feather="bookmark"></span>
+                                入住明细
+                            </a>
+                        {% endblock %}
+                    </li>
+                </ul>
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>其他</span>
+
+                </h6>
+                <ul class="nav flex-column mb-2">
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="#">#}
+{#                            <span data-feather="file-text"></span>#}
+{#                            续租管理#}
+{#                        </a>#}
+{#                    </li>#}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text"></span>
+                            优惠券管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text"></span>
+                            统计分析
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        {% load static %}
+        {% block content %}
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+                <div style="margin-top: 100px">
+                    <h2 style="text-align: center">
+                        <i>欢迎进入酒店管理系统 </i>
+                    </h2>
+                    <div style="text-align: center">
+                        <img src="{% static "dashboard.png" %}" alt="" height="300">
+                    </div>
+                </div>
+            </main>
+        {% endblock %}
+    </div>
+</div>
+
+
+{#<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"#}
+{#        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"#}
+{#        crossorigin="anonymous"></script>#}
+{#<script>window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"><\/script>')</script>#}
+{#<script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>#}
+{##}
+{##}
+{#<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>#}
+{#<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>#}
+{#<script src="/static/bootstrap/js/dashboard.js"></script>#}
+</body>
+</html>

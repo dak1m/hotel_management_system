@@ -1,0 +1,55 @@
+{% extends "dashboard.html" %}
+
+{% block room_manager %}
+    <a class="nav-link active" href="{% url 'list_rooms' %}">
+        <span data-feather="home"></span>
+        客房管理 <span class="sr-only">(current)</span>
+    </a>
+{% endblock %}
+
+{% block content %}
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+            <h1 class="h2">客房信息</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                    <a href="{% url 'create_rooms' %}">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">新增</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex;flex-wrap:wrap">
+            {% for room in rooms %}
+                <div style="position:relative;margin-right:60px;margin-bottom: 30px;text-align:center;display: inline-grid">
+                    <a href="{% url 'create_room_detail' room.id %}">
+                        <span style="position:absolute;top: 0;right: 0">新增明细</span>
+                    </a>
+
+                    <a href="{% url 'list_room_details' room.id %}">
+                        <img width="200px" height="200px" src="/media/{{ room.room_cover_pic }}">
+                    </a>
+                    {{ room.room_type }}({{ room.room_num }})
+                    <br>
+                    {{ room.introduction }}定价：{{ room.price }}
+                    <br>
+                    {% if room.is_occupied %}
+                        使用中
+                    {% else %}
+                        <a href="{% url 'create_order' room.id %}">立即预订</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+
+{% endblock %}

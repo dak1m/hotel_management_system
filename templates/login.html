@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="丁ql">
+    <meta name="description" content="hotel_management_system">
+    <title>登录</title>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+    <link href="/static/bootstrap/css/signin.css" rel="stylesheet">
+</head>
+<body class="text-center">
+
+<form class="form-signin" method="post">
+    {% load static %}
+    <img class="mb-4" src="{% static "logo.png" %}" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">酒店管理系统</h1>
+    {% csrf_token %}
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input name="username" type="username" id="username" class="form-control" placeholder="Username" required>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input name="password" type="password" id="password" class="form-control" placeholder="Password" required>
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me"> Remember me
+        </label>
+    </div>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2022-2077</p>
+</form>
+
+
+</body>
+</html>

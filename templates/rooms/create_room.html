@@ -1,0 +1,93 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+        <div class="container" style="margin-top: 50px">
+            <div class="row">
+                <div class="col-md-8 order-md-1">
+                    <h4 class="mb-3">新增客房</h4>
+                    <form enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="username">房间类型</label>
+                            <div class="input-group">
+                                <select name="room_type" class="custom-select d-block w-100" id="room_type" required>
+                                    <option value="双人间">双人间</option>
+                                    <option value="大床房">大床房</option>
+                                </select>
+                                <div class="invalid-feedback" style="width: 100%;">
+                                    房间类型不能为空
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="gender">房间号<span class="text-muted"></span></label>
+                            <input name="room_num" type="text" class="form-control" id="room_num" placeholder="room_num"
+                                   required>
+                            <div class="invalid-feedback">
+                                房间号不能为空
+                            </div>
+                        </div>
+
+                        <label for="gender">房间封面图片<span class="text-muted"></span></label>
+                        <div class="input-group mb-3">
+                            <div class="custom-file">
+                                <input name="room_cover_pic" type="file" class="custom-file-input form-control"
+                                       id="room_cover_pic"
+                                       aria-describedby="inputGroupFileAddon01">
+                                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address2">房间简介<span class="text-muted"></span></label>
+                            <input name="introduction" type="text" class="form-control" id="introduction"
+                                   placeholder="introduction"
+                                   required>
+                            <div class="invalid-feedback">
+                                房间简介不能为空
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address2">房间定价<span class="text-muted">(Optional)</span></label>
+                            <input name="price" type="text" class="form-control" id="price" placeholder="price"
+                                   required>
+                            <div class="invalid-feedback">
+                                房间定价不能为空
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">添加</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"><\/script>')</script>
+    <script src="/static//bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <script src="/static/bootstrap/js/form-validation.js"></script>
+    <script>
+        bsCustomFileInput.init()
+
+        var btn = document.getElementById('btnResetForm')
+        var form = document.querySelector('form')
+        btn.addEventListener('click', function () {
+            form.reset()
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,207 @@
+{% extends "dashboard.html" %}
+
+{% block room_checkin_manager %}
+    <a class="nav-link active" href="{% url 'list_room_checkins' %}">
+        <span data-feather="shopping-cart"></span>
+        办理入住
+    </a>
+{% endblock %}
+
+{% block content %}
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+            <h1 class="h2">办理入住</h1>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>房间号</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>使用天数</th>
+                    <th>下单顾客</th>
+                    <th>是否确认入住</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for room_checkin in room_checkins %}
+                    <tr>
+                        <td>{{ room_checkin.room_id.room_num }}</td>
+                        <td>{{ room_checkin.start_time.isoformat }}</td>
+                        <td>{{ room_checkin.end_time.isoformat }}</td>
+                        <td>{{ room_checkin.days }}</td>
+                        <td>{{ room_checkin.customer_id.name }}</td>
+                        {% if room_checkin.is_confirmed %}
+                            <td>已办理入住</td>
+                        {% else %}
+                            <td>未办理入住</td>
+                        {% endif %}
+                        <td>
+                            {% if room_checkin.is_confirmed %}
+                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal">
+                                    已办理
+                                </button>
+                            {% else %}
+                                {% if room_checkin.state != 1 %}
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                            data-target="#exampleModal"
+                                            onclick="bindValue({{ room_checkin.customer_id.id }},
+                                                    '{{ room_checkin.customer_id.name }}',
+                                                    {{ room_checkin.id }})">
+                                        办理入住
+                                    </button>
+                                {% else %}
+                                    <button type="button" class="btn btn-danger btn-sm">
+                                        订单已取消
+                                    </button>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">办理入住</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form enctype="multipart/form-data" method="post" class="needs-validation"
+                              novalidate>
+                            {% csrf_token %}
+                            <input name="room_checkin_id" type="text" class="form-control" id="room_checkin_id"
+                                   placeholder="introduction"
+                                   hidden
+                                   required>
+
+                            <input name="order_customer_id" type="text" class="form-control" id="order_customer_id"
+                                   placeholder="introduction"
+                                   hidden
+                                   required>
+                            <div class="mb-3 input-dyna-add">
+                                <label for="order_customer">顾客姓名<span
+                                        class="text-muted"></span></label>
+                                <input name="order_customer" type="text" class="form-control"
+                                       id="order_customer"
+                                       readonly
+                                       required>
+                                <div class="invalid-feedback">
+                                    顾客姓名不能为空
+                                </div>
+                            </div>
+
+                            <input class='btn btn-info' type="button" onclick="addInput()"
+                                   value="+添加"/><br/><br/>
+                        </form>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" onclick="getValue()">办理</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"><\/script>')</script>
+    <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $('#exampleModal').on('hidden.bs.modal', function () {
+            console.log('datatable被销毁了')
+            $("[id=add_customer]").each(function () {
+                $(this).remove();
+            });
+        });
+
+        function addInput() {
+            var input = $(`
+<div class="mb-3" id="add_customer">
+    <label for="customer_id">顾客姓名</label>
+    <div class="input-group">
+        <select name="customer_id" class="custom-select"
+                id="customer_id" size="1"
+                required>
+            {% for customer in customers %}
+                <option name="customer_id" value={{ customer.id }}>{{ customer.name }}</option>
+            {% endfor %}
+        </select>
+        <div class="invalid-feedback" style="width: 100%;">
+            顾客不能为空
+        </div>
+            <button class='removeclass btn btn-danger' type='button'><span>删除</span></button>
+    </div>
+</div>`);
+            // append 表示添加在标签内， appendTo 表示添加在元素外尾
+            $(".input-dyna-add").append(input);
+        }
+
+        function getValue() {
+            var valArr = new Array;
+            var val = $("#order_customer_id").val()
+            $("select[name='customer_id']").each(function (index, item) {
+                valArr[index] = $(this).val();
+            });
+            var room_checkin_id = $("#room_checkin_id").val();
+            valArr.push(val)
+            console.log("顾客id", valArr);
+            var data_obj = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                room_checkin_id: room_checkin_id,
+                customer_ids: valArr
+            };
+            $.ajax({
+                type: "post",
+                url: "{% url 'check_in' %}",
+                contentType: 'application/json',
+                data: JSON.stringify(data_obj),    //转换成json字符串格式
+                success: function (data) {
+                    console.log(data)
+                    $('#exampleModal').modal('hide')
+                    if (data.code == 200) {
+                        $('body').append($(`<button type="button" class="alert-button btn btn-success fade show" style="position:absolute;top:6%;left:50%; z-index: 999999">${data.message}</button >`))
+                    } else {
+                        $('body').append($(`<button type="button" class="alert-button btn btn-danger fade show" style="position:absolute;top:6%;left:50%; z-index: 999999">${data.message}</button >`))
+                    }
+                    window.setTimeout(function () {
+                        $(".alert-button").removeClass("show");
+                        window.location.reload()
+                    }, 1500);
+                },
+            });
+        };
+
+        $("body").on("click", ".removeclass", function (e) {
+            // remove text box
+            $(this).parent('div').parent('div').remove();
+            return false;
+        });
+
+        function bindValue(customer_id, name, room_checkin_id) {
+            console.log(customer_id, name, room_checkin_id);
+            $("#order_customer").val(name);
+            $("#order_customer_id").val(customer_id);
+            $("#room_checkin_id").val(room_checkin_id);
+        };
+
+    </script>
+
+{% endblock %}

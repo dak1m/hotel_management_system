@@ -1,0 +1,63 @@
+{% extends "dashboard.html" %}
+
+{% block customer_manager %}
+    <a class="nav-link active" href="{% url 'list_customers' %}">
+        <span data-feather="users"></span>
+        顾客管理 <span class="sr-only">(current)</span>
+    </a>
+{% endblock %}
+
+{% block content %}
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+            <h1 class="h2">顾客信息</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                    <a href="{% url 'create_customer' %}">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">新增</button>
+                    </a>
+                    <a href="{% url 'export_customer' %}">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">导出</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>手机号</th>
+                    <th>身份证号码</th>
+                    <th>备注信息</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for customer in customers %}
+                    <tr>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.sex }}</td>
+                        <td>{{ customer.cellphone }}</td>
+                        <td>{{ customer.identity_card }}</td>
+                        <td>{{ customer.extra }}</td>
+                        <td><a href="{% url 'update_customer' customer.id %}">编辑</a>
+                            <a href="{% url 'delete_customer' customer.id %}">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "dashboard.html" %}
+
+{% block checkin_customers %}
+    <a class="nav-link active" href="{% url 'list_checkin_customers' %}">
+        <span data-feather="bookmark"></span>
+        入住明细
+    </a>
+{% endblock %}
+
+{% block content %}
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+            <h1 class="h2">入住顾客信息</h1>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>预订编号</th>
+                    <th>房间号</th>
+                    <th>顾客姓名</th>
+                    <th>状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for checkin_customer in checkin_customers %}
+                    <tr>
+                        <td> {{ checkin_customer.room_checkin_id.id }}</td>
+                        <td>{{ checkin_customer.room_checkin_id.room_id.room_num }}</td>
+                        <td>{{ checkin_customer.name }}</td>
+                        {% if  checkin_customer.room_checkin_id.is_confirmed %}
+                            <td>入住中</td>
+                        {% else %}
+                            {% if checkin_customer.room_checkin_id.state == 0 %}
+                                <td>未办理入住</td>
+                            {% elif checkin_customer.room_checkin_id.state == 1 %}
+                                <td>订单已取消</td>
+                            {% elif checkin_customer.room_checkin_id.state == 2 %}
+                                <td>已退房</td>
+                            {% endif %}
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+{% endblock %}
