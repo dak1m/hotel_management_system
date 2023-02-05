@@ -68,7 +68,7 @@ class RoomDetailsForm(forms.ModelForm):
         file = self.cleaned_data['file']
         ext = file.name.split('.')[-1].lower()
         if ext not in ["jpg", "png"]:
-            raise forms.ValidationError("Only jpg and pdf files are allowed.")
+            raise forms.ValidationError("Only jpg and png files are allowed.")
 
         return file
 
