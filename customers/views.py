@@ -1,20 +1,43 @@
 import csv
-import json
 from datetime import datetime
 
-from django.shortcuts import render, reverse
 from django.contrib import messages
+from django.template.defaultfilters import register
+
 from .models import *
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 # Create your views here.
 @login_required
 def list_customers(request):
     customers = Customers.objects.all()
+    name = request.GET.get("name")
+    cellphone = request.GET.get("cellphone")
+    print(name)
+    print(cellphone)
+    param = ""
+    if name is not None and name != "":
+        customers = customers.filter(name__istartswith=name)
+        param += "&name={}".format(name)
+    if cellphone is not None and cellphone != "":
+        customers = customers.filter(cellphone__istartswith=cellphone)
+        param += "&cellphone={}".format(cellphone)
 
-    return render(request, "customers/customers.html", {"customers": customers})
+    paginator = Paginator(customers, 10)  # Show 25 contacts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, "customers/customers.html",
+                  {"customers": page_obj,
+                   "param": param})
+
+
+@register.filter('list')
+def do_list(value):
+    return range(1, value + 1)
 
 
 @login_required
@@ -71,8 +94,8 @@ def load_to_csv(request):
 
     customers = Customers.objects.all()
     for customer in customers:
-
-        writer.writerow([customer.id, customer.name, customer.sex, customer.cellphone, customer.identity_card, customer.extra])
+        writer.writerow(
+            [customer.id, customer.name, customer.sex, customer.cellphone, customer.identity_card, customer.extra])
 
     return response
 

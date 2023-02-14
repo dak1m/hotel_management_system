@@ -20,7 +20,8 @@
                     <th>预订编号</th>
                     <th>房间号</th>
                     <th>顾客姓名</th>
-                    <th>状态</th>
+                    <th>办理状态</th>
+                    <th>退房状态</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,15 +31,16 @@
                         <td>{{ checkin_customer.room_checkin_id.room_id.room_num }}</td>
                         <td>{{ checkin_customer.name }}</td>
                         {% if  checkin_customer.room_checkin_id.is_confirmed %}
-                            <td>入住中</td>
+                            <td>已办理入住</td>
                         {% else %}
-                            {% if checkin_customer.room_checkin_id.state == 0 %}
-                                <td>未办理入住</td>
-                            {% elif checkin_customer.room_checkin_id.state == 1 %}
-                                <td>订单已取消</td>
-                            {% elif checkin_customer.room_checkin_id.state == 2 %}
-                                <td>已退房</td>
-                            {% endif %}
+                            <td>未办理入住</td>
+                        {% endif %}
+                        {% if checkin_customer.room_checkin_id.state == 0 %}
+                            <td>未退房</td>
+                        {% elif checkin_customer.room_checkin_id.state == 1 %}
+                            <td>订单已取消</td>
+                        {% elif checkin_customer.room_checkin_id.state == 2 %}
+                            <td>已退房</td>
                         {% endif %}
                     </tr>
                 {% endfor %}
