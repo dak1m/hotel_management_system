@@ -134,6 +134,39 @@ def check_out(request):
 
 @login_required
 def list_checkin_customers(request):
-    objs = RoomCheckInCustomers.objects.all()
+    objs = RoomCheckInCustomers.objects.all().order_by("room_checkin_id")
+    id_map_num = {}
+    for v in objs:
+        if v.room_checkin_id in id_map_num:
+            id_map_num[v.room_checkin_id] += 1
+        else:
+            id_map_num[v.room_checkin_id] = 1
+    # 做一个排序，并且需要区分合并的表格
+    td1 = '<td rowspan="{}">{}</td>'
+    td2 = '<td rowspan="{}">{}</td>'
+    td3 = '<td>{}</td>'
+    td4 = '<td>{}</td>'
+    html = ""
+    dom_duplicate = {}
+    for v in objs:
+        html += '<tr>'
+        if v.room_checkin_id not in dom_duplicate:
+            html += td1.format(id_map_num[v.room_checkin_id], v.room_checkin_id.id)
+            html += td2.format(id_map_num[v.room_checkin_id], v.room_checkin_id.room_id.room_num)
+            html += td3.format(v.name)
+            html += td4.format(state_dict_name[v.room_checkin_id.state])
+            dom_duplicate[v.room_checkin_id] = True
+        else:
+            html += td3.format(v.name)
+            html += td4.format(state_dict_name[v.room_checkin_id.state])
+        html += '</tr>'
+        print(html)
 
-    return render(request, "rooms/room_checkin_customers.html", {'checkin_customers': objs})
+    return render(request, "rooms/room_checkin_customers.html", {'checkin_customers': objs, 'html': html})
+
+
+state_dict_name = {
+    0: '未退房',
+    1: '订单已取消',
+    2: '已退房',
+}

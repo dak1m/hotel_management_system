@@ -17,6 +17,7 @@
             <table class="table table-striped table-sm">
                 <thead>
                 <tr>
+                    <th>预订编号</th>
                     <th>房间号</th>
                     <th>开始时间</th>
                     <th>结束时间</th>
@@ -29,6 +30,7 @@
                 <tbody>
                 {% for room_checkin in room_checkins %}
                     <tr>
+                        <td>{{ room_checkin.id }}</td>
                         <td>{{ room_checkin.room_id.room_num }}</td>
                         <td>{{ room_checkin.start_time.isoformat }}</td>
                         <td>{{ room_checkin.end_time.isoformat }}</td>
