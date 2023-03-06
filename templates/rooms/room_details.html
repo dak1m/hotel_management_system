@@ -17,14 +17,14 @@
             </ol>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="/media/{{ room_details.0.room_pic }}" class="d-block w-100" alt="..." height="800px">
+                    <img src="/media/{{ room_details.0.room_pic }}" class="d-block w-100" alt="..." height="720px">
                     <div class="carousel-caption d-none d-md-block">
                         <p>{{ room_details.0.describe }}</p>
                     </div>
                 </div>
                 {% for detail in room_details|slice:"1:" %}
                     <div class="carousel-item">
-                        <img src="/media/{{ detail.room_pic }}" class="d-block w-100" alt="..." height="800px">
+                        <img src="/media/{{ detail.room_pic }}" class="d-block w-100" alt="..." height="720px">
                         <div class="carousel-caption d-none d-md-block">
                             <p>{{ detail.describe }}</p>
                         </div>

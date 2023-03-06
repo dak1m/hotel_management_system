@@ -1,0 +1,146 @@
+{% extends "dashboard.html" %}
+
+{% block statistics %}
+    <a class="nav-link active" href="{% url 'statistics' %}">
+        <span data-feather="file-text"></span>
+        统计分析
+    </a>
+{% endblock %}
+
+{% block content %}
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+            <h1 class="h2">统计分析</h1>
+        </div>
+
+        <div style="display: flex; flex-wrap:wrap">
+            <div style="width: 40%">
+                <canvas id="pie-chart"></canvas>
+            </div>
+            <div style="width: 40%;margin-left: 100px">
+                <canvas id="line-chart"></canvas>
+            </div>
+            <div style="width: 40%; margin-top: 100px">
+                <canvas id="bar-chart"></canvas>
+            </div>
+            <div style="width: 40%; margin-top: 100px;margin-left: 100px">
+                <canvas id="c_bar-chart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        var pie_config = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: {{ pie_data|safe }},
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 205, 86)',
+                        'rgb(201, 203, 207)',
+                        'rgb(54, 162, 235)'
+                    ],
+                    label: 'room_type',
+                }],
+                labels: {{ pie_labels|safe }}
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '房间类型统计',
+                    position: 'bottom'
+                }
+            },
+        };
+
+        var line_config = {
+            type: 'line',
+            data: {
+                datasets: [{
+                    data: {{ line_data |safe }},
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    label: '支付金额',
+                }],
+                labels: {{ line_labels |safe }}
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '营收统计',
+                    position: 'bottom'
+                }
+            },
+        };
+
+        var bar_config = {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    data: {{ bar_data |safe }},
+                    backgroundColor:
+                        [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 205, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(201, 203, 207, 0.2)']
+                    ,
+                    label: '使用次数',
+                }],
+                labels: {{ bar_labels |safe }}
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '房间使用统计',
+                    position: 'bottom'
+                }
+            },
+        };
+
+        var c_bar_config = {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    axis: 'y',
+                    data: {{ c_bar_data |safe }},
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(201, 203, 207, 0.2)'],
+                    label: '下单次数',
+                }],
+                labels: {{ c_bar_labels |safe }}
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '下单统计',
+                    position: 'bottom'
+                },
+            },
+        };
+        window.onload = function () {
+            var ctx = document.getElementById('pie-chart').getContext('2d');
+            window.myPie = new Chart(ctx, pie_config);
+            var ctx = document.getElementById('line-chart').getContext('2d');
+            window.myPie = new Chart(ctx, line_config);
+            var ctx = document.getElementById('bar-chart').getContext('2d');
+            window.myPie = new Chart(ctx, bar_config);
+            var ctx = document.getElementById('c_bar-chart').getContext('2d');
+            window.myPie = new Chart(ctx, c_bar_config);
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+{% endblock %}

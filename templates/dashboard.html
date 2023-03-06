@@ -101,23 +101,25 @@
 
                 </h6>
                 <ul class="nav flex-column mb-2">
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="#">#}
-{#                            <span data-feather="file-text"></span>#}
-{#                            续租管理#}
-{#                        </a>#}
-{#                    </li>#}
+                    {#                    <li class="nav-item">#}
+                    {#                        <a class="nav-link" href="#">#}
+                    {#                            <span data-feather="file-text"></span>#}
+                    {#                            续租管理#}
+                    {#                        </a>#}
+                    {#                    </li>#}
+                    {#                    <li class="nav-item">#}
+                    {#                        <a class="nav-link" href="#">#}
+                    {#                            <span data-feather="file-text"></span>#}
+                    {#                            优惠券管理#}
+                    {#                        </a>#}
+                    {#                    </li>#}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            优惠券管理
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            统计分析
-                        </a>
+                        {% block statistics %}
+                            <a class="nav-link" href="{% url 'statistics' %}">
+                                <span data-feather="file-text"></span>
+                                统计分析
+                            </a>
+                        {% endblock %}
                     </li>
                 </ul>
             </div>

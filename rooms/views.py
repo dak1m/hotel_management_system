@@ -17,6 +17,12 @@ from django.http import JsonResponse
 @login_required
 def list_rooms(request):
     rooms = Rooms.objects.all()
+    room_num = request.GET.get("room_num")
+    is_occupied = request.GET.get("is_occupied")
+    if room_num is not None and room_num != "":
+        rooms = rooms.filter(room_num__istartswith=room_num)
+    if is_occupied is not None and is_occupied != "":
+        rooms = rooms.filter(is_occupied=is_occupied)
 
     return render(request, "rooms/rooms.html", {"rooms": rooms})
 
