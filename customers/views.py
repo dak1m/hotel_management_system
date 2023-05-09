@@ -32,7 +32,8 @@ def list_customers(request):
     page_obj = paginator.get_page(page_number)
     return render(request, "customers/customers.html",
                   {"customers": page_obj,
-                   "param": param})
+                   "param": param,
+                   "user": request.user.username})
 
 
 @register.filter('list')
@@ -52,7 +53,7 @@ def create_customer(request):
         else:
             messages.error(request, '添加用户失败')
 
-    return render(request, "customers/create_customer.html")
+    return render(request, "customers/create_customer.html", {"user": request.user.username})
 
 
 @login_required
@@ -63,11 +64,11 @@ def update_customer(request, pk):
         if customer.is_valid():
             customer.save()
             messages.success(request, '更新用户成功')
-            return render(request, "customers/update_customer.html", {'customer': obj})
+            return render(request, "customers/update_customer.html", {'customer': obj, "user": request.user.username})
         else:
             messages.error(request, '更新用户失败')
 
-    return render(request, "customers/update_customer.html", {'customer': obj})
+    return render(request, "customers/update_customer.html", {'customer': obj, "user": request.user.username})
 
 
 @login_required

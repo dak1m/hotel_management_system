@@ -7,7 +7,6 @@ from customers.models import Customers
 from orders.models import Orders
 from rooms.models import Rooms, RoomsForm, RoomCheckInCustomers, RoomCheckIns, RoomDetailsForm, RoomDetails
 from django.contrib import messages
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
@@ -24,7 +23,7 @@ def list_rooms(request):
     if is_occupied is not None and is_occupied != "":
         rooms = rooms.filter(is_occupied=is_occupied)
 
-    return render(request, "rooms/rooms.html", {"rooms": rooms})
+    return render(request, "rooms/rooms.html", {"rooms": rooms, "user": request.user.username})
 
 
 # 展示房间明细
@@ -35,7 +34,8 @@ def list_room_details(request, room_id):
     if len(room_details) == 0:
         is_blank = True
         return redirect("create_room_detail", room_id)
-    return render(request, "rooms/room_details.html", {"room_details": room_details, "is_blank": is_blank})
+    return render(request, "rooms/room_details.html",
+                  {"room_details": room_details, "is_blank": is_blank, "user": request.user.username})
 
 
 # 创建房间
@@ -47,11 +47,11 @@ def create_rooms(request):
         if room.is_valid():
             room.save()
             messages.success(request, '添加房间成功')
-            return render(request, "rooms/create_room.html")
+            return render(request, "rooms/create_room.html", {"user": request.user.username})
         else:
             messages.info(request, '添加房间失败')
 
-    return render(request, "rooms/create_room.html")
+    return render(request, "rooms/create_room.html", {"user": request.user.username})
 
 
 # 创建房间明细
@@ -65,11 +65,11 @@ def create_room_detail(request, pk):
         if room_detail_form.is_valid():
             room_detail_form.save()
             messages.success(request, '添加房间明细成功')
-            return render(request, "rooms/create_room_detail.html")
+            return render(request, "rooms/create_room_detail.html", {"user": request.user.username})
         else:
             messages.info(request, '添加房间明细失败')
 
-    return render(request, "rooms/create_room_detail.html")
+    return render(request, "rooms/create_room_detail.html", {"user": request.user.username})
 
 
 @login_required
@@ -77,7 +77,8 @@ def list_room_checkins(request):
     room_checkins = RoomCheckIns.objects.all()
     customers = Customers.objects.all()
 
-    return render(request, "rooms/room_checkins.html", {"room_checkins": room_checkins, "customers": customers})
+    return render(request, "rooms/room_checkins.html",
+                  {"room_checkins": room_checkins, "customers": customers, "user": request.user.username})
 
 
 # 办理入住
@@ -114,7 +115,7 @@ def check_in(request):
 def list_room_checkouts(request):
     objs = RoomCheckIns.objects.all()
 
-    return render(request, "rooms/room_checkout.html", {'rooms': objs})
+    return render(request, "rooms/room_checkout.html", {'rooms': objs, "user": request.user.username})
 
 
 # 退房处理
@@ -168,7 +169,8 @@ def list_checkin_customers(request):
         html += '</tr>'
         print(html)
 
-    return render(request, "rooms/room_checkin_customers.html", {'checkin_customers': objs, 'html': html})
+    return render(request, "rooms/room_checkin_customers.html",
+                  {'checkin_customers': objs, 'html': html, "user": request.user.username})
 
 
 state_dict_name = {

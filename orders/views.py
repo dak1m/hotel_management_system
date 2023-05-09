@@ -3,7 +3,6 @@ import uuid
 import time
 
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
@@ -59,14 +58,16 @@ def order(request, room_id):
         messages.success(request, '下单成功')
         return redirect("list_rooms")
 
-    return render(request, 'orders/create_order.html', {"room": room, "customers": customers})
+    return render(request, 'orders/create_order.html',
+                  {"room": room, "customers": customers, "user": request.user.username})
 
 
 def list_order(request):
     orders = Orders.objects.all()
 
     return render(request, "orders/orders.html", {"orders": orders,
-                                                  "state_desc": StateDesc})
+                                                  "state_desc": StateDesc,
+                                                  "user": request.user.username})
 
 
 # 取消订单

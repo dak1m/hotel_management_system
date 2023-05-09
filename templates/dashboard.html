@@ -34,7 +34,6 @@
             data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    {#    <input class="form-control form-control-dark w-100" type="text" placeholder="搜索" aria-label="Search">#}
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
             <a class="nav-link" href="{% url 'logout' %}">注销</a>
@@ -49,18 +48,22 @@
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         {% block customer_manager %}
-                            <a class="nav-link" href="{% url 'list_customers' %}">
-                                <span data-feather="users"></span>
-                                顾客管理 <span class="sr-only">(current)</span>
-                            </a>
+                            {% if user == 'admin' %}
+                                <a class="nav-link" href="{% url 'list_customers' %}">
+                                    <span data-feather="users"></span>
+                                    顾客管理 <span class="sr-only">(current)</span>
+                                </a>
+                            {% endif %}
                         {% endblock %}
                     </li>
                     <li class="nav-item">
                         {% block order_manager %}
-                            <a class="nav-link" href="{% url 'list_orders' %}">
-                                <span data-feather="file"></span>
-                                订单管理
-                            </a>
+                            {% if user == 'admin' %}
+                                <a class="nav-link" href="{% url 'list_orders' %}">
+                                    <span data-feather="file"></span>
+                                    订单管理
+                                </a>
+                            {% endif %}
                         {% endblock %}
                     </li>
                     <li class="nav-item">
@@ -73,46 +76,39 @@
                     </li>
                     <li class="nav-item">
                         {% block room_checkin_manager %}
-                            <a class="nav-link" href="{% url 'list_room_checkins' %}">
-                                <span data-feather="shopping-cart"></span>
-                                办理入住
-                            </a>
+                            {% if user == 'admin' %}
+                                <a class="nav-link" href="{% url 'list_room_checkins' %}">
+                                    <span data-feather="shopping-cart"></span>
+                                    办理入住
+                                </a>
+                            {% endif %}
                         {% endblock %}
                     </li>
                     {% block room_checkout_manager %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'list_room_checkouts' %}">
-                                <span data-feather="bar-chart-2"></span>
-                                办理退房
-                            </a>
-                        </li>
+                        {% if user == 'admin' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'list_room_checkouts' %}">
+                                    <span data-feather="bar-chart-2"></span>
+                                    办理退房
+                                </a>
+                            </li>
+                        {% endif %}
                     {% endblock %}
                     <li class="nav-item">
                         {% block checkin_customers %}
-                            <a class="nav-link" href="{% url 'list_checkin_customers' %}">
-                                <span data-feather="bookmark"></span>
-                                入住明细
-                            </a>
+                            {% if user == 'admin' %}
+                                <a class="nav-link" href="{% url 'list_checkin_customers' %}">
+                                    <span data-feather="bookmark"></span>
+                                    入住明细
+                                </a>
+                            {% endif %}
                         {% endblock %}
                     </li>
                 </ul>
                 <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                     <span>其他</span>
-
                 </h6>
                 <ul class="nav flex-column mb-2">
-                    {#                    <li class="nav-item">#}
-                    {#                        <a class="nav-link" href="#">#}
-                    {#                            <span data-feather="file-text"></span>#}
-                    {#                            续租管理#}
-                    {#                        </a>#}
-                    {#                    </li>#}
-                    {#                    <li class="nav-item">#}
-                    {#                        <a class="nav-link" href="#">#}
-                    {#                            <span data-feather="file-text"></span>#}
-                    {#                            优惠券管理#}
-                    {#                        </a>#}
-                    {#                    </li>#}
                     <li class="nav-item">
                         {% block statistics %}
                             <a class="nav-link" href="{% url 'statistics' %}">

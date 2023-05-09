@@ -15,6 +15,7 @@ def sign_in(request):
         if user is not None:
             # 保存登录会话
             login(request, user)
+
             return redirect("/dashboard")
         else:
             return render(request, 'login.html', {'error': '用户名或密码错误！'})
@@ -22,15 +23,31 @@ def sign_in(request):
     return render(request, 'login.html')
 
 
+def user_sign_in(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None and username != 'admin':
+            # 保存登录会话
+            login(request, user)
+
+            return redirect("/dashboard")
+        else:
+            return render(request, 'user_login.html', {'error': '用户名或密码错误！'})
+
+    return render(request, 'user_login.html')
+
+
 @login_required
-def logout(request):
+def log_out(request):
     logout(request)
-    return redirect("login/")
+    return redirect("/")
 
 
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    return render(request, 'dashboard.html', {"user": request.user.username})
 
 
 @login_required
@@ -86,4 +103,5 @@ def statistics(request):
     return render(request, 'statistics.html', {'pie_labels': pie_labels, 'pie_data': pie_data,
                                                'line_labels': line_labels, 'line_data': line_data,
                                                'bar_labels': bar_labels, 'bar_data': bar_data,
-                                               'c_bar_labels': c_bar_labels, 'c_bar_data': c_bar_data})
+                                               'c_bar_labels': c_bar_labels, 'c_bar_data': c_bar_data,
+                                               "user": request.user.username})
